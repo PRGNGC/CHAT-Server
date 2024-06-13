@@ -1,0 +1,3 @@
+{
+	"src/**/*.{js,jsx,ts,tsx,html}": "npx prettier src/**/*.{js,jsx,ts,tsx} --check"
+}

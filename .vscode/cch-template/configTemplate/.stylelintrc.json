@@ -1,0 +1,59 @@
+{
+	"extends": ["stylelint-config-standard"],
+	"rules": {
+		"selector-class-pattern": "([a-z])|(([a-z]+[A-Z]+\\w+)+)",
+		"selector-max-id": 0,
+		"rule-empty-line-before": "always-multi-line",
+		"color-function-notation": "modern",
+		"alpha-value-notation": "percentage",
+		"no-descending-specificity": true,
+		"no-duplicate-at-import-rules": true,
+		"no-duplicate-selectors": true,
+		"block-no-empty": true,
+		"comment-no-empty": true,
+		"color-no-invalid-hex": true,
+		"media-query-no-invalid": true,
+		"named-grid-areas-no-invalid": true,
+		"font-family-no-missing-generic-family-keyword": true,
+		"function-linear-gradient-no-nonstandard-direction": true,
+		"annotation-no-unknown": true,
+		"selector-anb-no-unmatchable": true,
+		"function-no-unknown": true,
+		"selector-type-case": "lower",
+		"value-keyword-case": "lower",
+		"at-rule-allowed-list": ["use", "media", "include", "mixin"],
+		"at-rule-no-unknown": [
+			true,
+			{
+				"ignoreAtRules": ["use", "media", "include", "mixin"]
+			}
+		],
+		"unit-allowed-list": [
+			"%",
+			"deg",
+			"px",
+			"em",
+			"rem",
+			"ms",
+			"vh",
+			"vw",
+			"vmin",
+			"vmax",
+			"svh",
+			"lvh",
+			"dvh",
+			"lh",
+			"rlh",
+			"vi",
+			"vb",
+			"ic",
+			"ch",
+			"cap",
+			"turn",
+			"grad",
+			"rad",
+			"s"
+		]
+	},
+	"defaultSeverity": "warning"
+}

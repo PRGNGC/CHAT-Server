@@ -1,0 +1,10 @@
+.vscode
+README.md
+public
+node_modules
+husky
+package-lock.json
+package.json
+tsconfig.json
+tsconfig.node.json
+vite.config.ts
