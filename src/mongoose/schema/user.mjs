@@ -14,7 +14,13 @@ const UserSchema = new mongoose.Schema({
 	status: { type: mongoose.Schema.Types.String, required: true },
 	channels: { type: mongoose.Schema.Types.Array, required: true },
 	dms: { type: mongoose.Schema.Types.Array, required: true },
-	notifications: { type: mongoose.Schema.Types.Array, required: true }
+	notifications: { type: mongoose.Schema.Types.Array, required: true },
+	uniqueID: { type: mongoose.Schema.Types.String, required: true },
+	otherAccounts: { type: mongoose.Schema.Types.Array, required: true }
 });
 
 export const User = mongoose.model("User", UserSchema);
+
+
+
+

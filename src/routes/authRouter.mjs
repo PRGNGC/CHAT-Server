@@ -7,6 +7,7 @@ import { v4 as uuidv4, v6 as uuidv6 } from "uuid";
 import multer from "multer";
 import { Channels } from "../mongoose/schema/channel.mjs";
 import { Dms } from "../mongoose/schema/dms.mjs";
+import * as fs from "fs";
 
 const router = new Router();
 const upload = multer();
@@ -52,7 +53,8 @@ router.post("/api/auth/login", async (req, res) => {
 			channels: channels,
 			dms: dms,
 			status: user.status,
-			notifications: user.notifications
+			notifications: user.notifications,
+			otherAccounts: user.otherAccounts
 		}
 	});
 });
@@ -64,23 +66,49 @@ router.post("/api/auth/logout", (req, res) => {
 
 router.post("/api/auth/signup", upload.single("img"), async (req, res) => {
 	const userImg = req.file;
-	const { login, password, status, name } = req.body;
+	const { login, password, status, name, uniqueID } = req.body;
+
+	console.log(userImg);
 
 	const isSuchLoginExists = await User.findOne({ login: login });
 	if (isSuchLoginExists) {
 		return res.status(400).send({ msg: "Login already exists" });
 	}
 
+	let newID = uuidv6();
+
+	const associatedAccounts = await User.find({ uniqueID: uniqueID });
+
+	console.log(associatedAccounts);
+
+	for (let i = 0; i < associatedAccounts.length; i++) {
+		await User.updateOne(
+			{ userId: associatedAccounts[i].userId },
+			{
+				$push: { otherAccounts: newID }
+			}
+		);
+	}
+
+	const filee = userImg.originalname.split(".");
+	const fileBase64 = Buffer.from(userImg.buffer, "base64");
+	fs.writeFileSync(`public/${filee[0]}.${filee[1]}`, fileBase64);
+	const fileUrl = `http://localhost:3500/${filee[0]}.${filee[1]}`;
+
 	const newUser = await User({
 		login: login,
 		password: password,
-		userImg: Buffer.from(userImg.buffer).toString("base64"),
-		userId: uuidv6(),
+		userImg: fileUrl,
+		// userImg: Buffer.from(userImg.buffer).toString("base64"),
+		userId: newID,
 		name: name,
 		username: `@${name.toLowerCase().split(" ").join("")}`,
 		status: status,
 		channels: [],
-		dms: []
+		dms: [],
+		notifications: [],
+		uniqueID: uniqueID,
+		otherAccounts: associatedAccounts.map((item) => item.userId)
 	});
 
 	await newUser.save();
@@ -88,8 +116,9 @@ router.post("/api/auth/signup", upload.single("img"), async (req, res) => {
 	const user = {
 		name,
 		username: `@${name.toLowerCase().split(" ").join("")}`,
-		userId: uuidv6(),
-		userImg: Buffer.from(userImg.buffer).toString("base64"),
+		userId: newID,
+		// userImg: Buffer.from(userImg.buffer).toString("base64"),
+		userImg: fileUrl,
 		status,
 		channels: [],
 		dms: []
